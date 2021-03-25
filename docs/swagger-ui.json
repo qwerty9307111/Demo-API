@@ -1,0 +1,1973 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "学校选课系统 Demo API 文档",
+    "version": "1.0.5",
+    "title": "Swagger Petstore",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "petstore.swagger.io",
+  "basePath": "/v2",
+  "tags": [
+    {
+      "name": "登陆",
+      "description": "登入登出"
+    },
+    {
+      "name": "common",
+      "description": "common api"
+    },
+    {
+      "name": "course",
+      "description": "课程相关接口"
+    },
+    {
+      "name": "students",
+      "description": "学生管理接口"
+    },
+    {
+      "name": "file",
+      "description": "上传文件"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "user/login": {
+      "post": {
+        "tags": [
+          "登陆"
+        ],
+        "summary": "用户登陆",
+        "description": "",
+        "operationId": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "description": "请求对象数据",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/LoginResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        }
+      }
+    },
+    "/user/logout": {
+      "post": {
+        "tags": [
+          "登陆"
+        ],
+        "summary": "用户登出",
+        "description": "",
+        "operationId": "logout",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/baseResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/common/getStatistics": {
+      "get": {
+        "tags": [
+          "common"
+        ],
+        "summary": "获取统计数据",
+        "description": "首页获取统计数据",
+        "operationId": "getStatistics",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "userType",
+            "description": "用户类型（0：学生，1：老师，2：教务处）",
+            "required": true,
+            "type": "integer",
+            "enum": [0, 1, 2]
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "description": "用户 ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/getStatisticsResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/common/getTodaysCourseList": {
+      "get": {
+        "tags": [ "common" ],
+        "summary": "查询今日课程列表",
+        "description": "查询今日课程列表（如果是学生或老师查询，不需要开启分页）",
+        "operationId": "getTodaysCourseList",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "description": "用户 ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "userType",
+            "description": "用户类型（0：学生，1：老师，2：教务处）",
+            "required": true,
+            "type": "integer",
+            "enum": [0, 1, 2]
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "description": "分页 size",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "currentPage",
+            "description": "分页 currentPage",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/getTodaysCourseListResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/course": {
+      "post": {
+        "tags": [ "course" ],
+        "summary": "新建课程",
+        "description": "新建课程",
+        "operationId": "createCourse",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "description": "",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/courseDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/baseResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [ "course" ],
+        "summary": "编辑课程",
+        "description": "编辑课程",
+        "operationId": "updateCourse",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "description": "",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/courseDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/baseResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [ "course" ],
+        "summary": "课程管理 - 老师删除课程",
+        "description": "老师删除课程",
+        "operationId": "deleteCourse",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "description": "",
+            "required": true,
+            "type": "object",
+            "properties": {
+              "courseId": {
+                "type": "string",
+                "description": "课程 ID"
+              },
+              "userId": {
+                "type": "string",
+                "description": "用户 ID"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/baseResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/course/approval": {
+      "post": {
+        "tags": [ "course" ],
+        "summary": "教务处审批课程",
+        "description": "教务处审批课程",
+        "operationId": "approval",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "description": "",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/approvalDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/baseResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/course/list": {
+      "get": {
+        "tags": [ "course" ],
+        "summary": "课程管理 - 列表查询",
+        "description": "查询课程列表",
+        "operationId": "getCourseList",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "userId",
+            "description": "用户 ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "userType",
+            "description": "用户类型（0：学生，1：老师，2：教务处）",
+            "required": true,
+            "type": "integer",
+            "enum": [0, 1, 2]
+          },
+          {
+            "in": "query",
+            "name": "courseName",
+            "type": "string",
+            "description": "课程名称"
+          },
+          {
+            "in": "query",
+            "name": "teacher",
+            "type": "string",
+            "description": "授课老师"
+          },
+          {
+            "in": "query",
+            "name": "courseStatus",
+            "type": "integer",
+            "description": "课程状态（1：待审批，2：未开始，3：已开始，4：已结束，5：拒绝审批）"
+          },
+          {
+            "in": "query",
+            "name": "courseType",
+            "type": "string",
+            "description": "课程类型，多个类型使用逗号分隔"
+          },
+          {
+            "in": "query",
+            "name": "queryType",
+            "type": "string",
+            "description": "学生-选课管理传 0，我的课程传 1"
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "description": "分页 size",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "currentPage",
+            "description": "分页 currentPage",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/courseListResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/course/detail": {
+      "get": {
+        "tags": [ "course" ],
+        "summary": "课程管理 - 课程详情",
+        "description": "查询课程详情",
+        "operationId": "getCourseDetail",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "courseId",
+            "description": "课程 ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/courseDetailResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/course/classHourList": {
+      "get": {
+        "tags": [ "course" ],
+        "summary": "课程管理 - 课程详情 - 查询课时列表",
+        "description": "查询课时列表",
+        "operationId": "classHourList",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "courseId",
+            "description": "课程 ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/classHourListResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/course/students": {
+      "get": {
+        "tags": [ "course" ],
+        "summary": "课程管理 - 课程详情 - 查询选择该课程的学生列表",
+        "description": "查询选择该课程的学生列表",
+        "operationId": "students",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "courseId",
+            "description": "课程 ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "description": "分页 size",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "currentPage",
+            "description": "分页 currentPage",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/courseStudentsResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/course/selection": {
+      "post": {
+        "tags": [ "course" ],
+        "summary": "课程管理 - 学生选课接口",
+        "description": "学生选课接口",
+        "operationId": "courseSelection",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "description": "",
+            "required": true,
+            "type": "object",
+            "properties": {
+              "courseId": {
+                "type": "string",
+                "description": "课程 ID"
+              },
+              "userId": {
+                "type": "string",
+                "description": "用户 ID"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/baseResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/course/cancelSelection": {
+      "post": {
+        "tags": [ "course" ],
+        "summary": "课程管理 - 学生取消选课接口",
+        "description": "学生取消选课接口",
+        "operationId": "cancelSelection",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "description": "",
+            "required": true,
+            "type": "object",
+            "properties": {
+              "courseId": {
+                "type": "string",
+                "description": "课程 ID"
+              },
+              "userId": {
+                "type": "string",
+                "description": "用户 ID"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/baseResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/course/marking": {
+      "post": {
+        "tags": [ "course" ],
+        "summary": "打分接口",
+        "description": "打分接口",
+        "operationId": "marking",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "description": "",
+            "required": true,
+            "type": "object",
+            "properties": {
+              "courseId": {
+                "type": "string",
+                "description": "课程 ID"
+              },
+              "studentId": {
+                "type": "string",
+                "description": "学生 ID"
+              },
+              "scores": {
+                "type": "integer",
+                "description": "分数"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/baseResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/course/classHour": {
+      "post": {
+        "tags": [ "course" ],
+        "summary": "新建课时",
+        "description": "新建课时",
+        "operationId": "createClass",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "description": "",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/classHourDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/baseResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [ "course" ],
+        "summary": "编辑课时",
+        "description": "编辑课时",
+        "operationId": "updateClass",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "description": "",
+            "required": true,
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/classHourDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/baseResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [ "course" ],
+        "summary": "删除课时",
+        "description": "删除课时",
+        "operationId": "deleteClass",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "data",
+            "description": "",
+            "required": true,
+            "type": "object",
+            "properties": {
+              "classId": {
+                "type": "string",
+                "description": "课时 ID"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/baseResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/students/list": {
+      "get": {
+        "tags": [ "students" ],
+        "summary": "学生管理 - 列表查询",
+        "description": "查询学生列表",
+        "operationId": "getStudentsList",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "studentName",
+            "type": "string",
+            "description": "学生名称"
+          },
+          {
+            "in": "query",
+            "name": "studentNo",
+            "type": "string",
+            "description": "学生编号"
+          },
+          {
+            "in": "query",
+            "name": "minScores",
+            "type": "integer",
+            "description": "最小分数"
+          },
+          {
+            "in": "query",
+            "name": "maxScores",
+            "type": "integer",
+            "description": "最大分数"
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "description": "分页 size",
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "currentPage",
+            "description": "分页 currentPage",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/studentsListResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    },
+    "/file/upload": {
+      "post": {
+        "tags": [ "file" ],
+        "summary": "上传文件",
+        "description": "上传文件",
+        "operationId": "uploadFIle",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "登陆用户的 token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "file",
+            "description": "文件",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/uploadResponse"
+            }
+          },
+          "201": { "description": "Created" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        },
+        "security": [
+          {
+            "petstore_auth": [
+              "write:pets",
+              "read:pets"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    },
+    "petstore_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://petstore.swagger.io/oauth/authorize",
+      "flow": "implicit",
+      "scopes": {
+        "read:pets": "read your pets",
+        "write:pets": "modify pets in your account"
+      }
+    }
+  },
+  "definitions": {
+    "LoginParams": {
+      "type": "object",
+      "properties": {
+        "userName": {
+          "type": "string",
+          "description": "用户名"
+        },
+        "password": {
+          "type": "string",
+          "description": "密码"
+        }
+      }
+    },
+    "LoginResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "description": "用户基础信息",
+          "properties": {
+            "userName": {
+              "type": "string",
+              "required": true,
+              "description": "用户名"
+            },
+            "nickName": {
+              "type": "string",
+              "description": "登录名（昵称）"
+            },
+            "avatar": {
+              "type": "string",
+              "description": "头像"
+            },
+            "userId": {
+              "type": "string",
+              "required": true,
+              "description": "用户 ID"
+            },
+            "userType": {
+              "type": "integer",
+              "required": true,
+              "description": "用户类型（0：学生，1：老师，2：教务处）",
+              "enum": [0, 1, 2]
+            },
+            "token": {
+              "type": "string",
+              "required": true,
+              "description": "token"
+            },
+            "status": {
+              "type": "integer",
+              "required": true,
+              "description": "用户状态（0：正常，1：异常）",
+              "enum": [0, 1]
+            },
+            "email": {
+              "type": "string",
+              "description": "邮箱"
+            },
+            "tel": {
+              "type": "string",
+              "description": "手机号"
+            }
+          }
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "baseResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "courseDTO": {
+      "type": "object",
+      "properties": {
+        "courseId": {
+          "type": "string",
+          "description": "课程 ID（更新接口需要传入）"
+        },
+        "major": {
+          "type": "string",
+          "description": "专业"
+        },
+        "semester": {
+          "type": "string",
+          "description": "学期"
+        },
+        "courseName": {
+          "type": "string",
+          "description": "课程名称"
+        },
+        "classHour": {
+          "type": "integer",
+          "description": "课程节数"
+        },
+        "courseType": {
+          "type": "integer",
+          "description": "课程分类"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "开课时间"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "考试时间"
+        },
+        "description": {
+          "type": "string",
+          "description": "文字描述"
+        },
+        "coverImg": {
+          "type": "string",
+          "description": "课程封面"
+        }
+      }
+    },
+    "classHourDTO": {
+      "type": "object",
+      "properties": {
+        "classId": {
+          "type": "string",
+          "description": "课时 ID（更新接口需要传入）"
+        },
+        "courseId": {
+          "type": "string",
+          "description": "课程 ID"
+        },
+        "className": {
+          "type": "string",
+          "description": "课时名称"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "开课时间"
+        },
+        "duration": {
+          "type": "string",
+          "description": "课程时长"
+        },
+        "classroom": {
+          "type": "string",
+          "description": "上课地点"
+        }
+      }
+    },
+    "uploadResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "文件 url"
+            },
+            "fileName": {
+              "type": "string",
+              "description": "文件名"
+            },
+            "id": {
+              "type": "string",
+              "description": "文件 ID"
+            }
+          }
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "getStatisticsResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "userType": {
+              "type": "integer",
+              "description": "用户类型（0：学生，1：老师，2：教务处）",
+              "enum": [0, 1, 2]
+            },
+            "userId": {
+              "type": "string",
+              "required": true,
+              "description": "用户 ID"
+            },
+            "selectedCoursesNum": {
+              "type": "integer",
+              "required": true,
+              "description": "学生 - 已选课程数"
+            },
+            "excellentCoursesNum": {
+              "type": "integer",
+              "description": "学生 - 优良课程数"
+            },
+            "failingCoursesNum": {
+              "type": "integer",
+              "description": "学生 - 不及格课程数"
+            },
+            "myCoursesNum": {
+              "type": "integer",
+              "description": "老师 - 课程数量"
+            },
+            "excellentStudentsNum": {
+              "type": "integer",
+              "description": "老师 - 优良学生数"
+            },
+            "failedStudentsNum": {
+              "type": "integer",
+              "description": "老师 - 不及格学生数"
+            },
+            "allCoursesNum": {
+              "type": "integer",
+              "description": "教务处 - 课程数量"
+            },
+            "allExcellentStudentsNum": {
+              "type": "integer",
+              "description": "教务处 - 优良学生数"
+            },
+            "allFailedStudentsNum": {
+              "type": "integer",
+              "description": "教务处 - 不及格学生数"
+            }
+          }
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "getTodaysCourseListResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "userType": {
+              "type": "integer",
+              "description": "用户类型（0：学生，1：老师，2：教务处）"
+            },
+            "userId": {
+              "type": "string",
+              "required": true,
+              "description": "用户 ID"
+            },
+            "list": {
+              "description": "今日课程列表",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "课程 ID"
+                  },
+                  "course": {
+                    "type": "string",
+                    "description": "课程名称"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "上课时间"
+                  },
+                  "teacher": {
+                    "type": "string",
+                    "description": "授课老师"
+                  },
+                  "classroom": {
+                    "type": "string",
+                    "description": "教室"
+                  },
+                  "studentsNum": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "学生人数"
+                  }
+                }
+              }
+            },
+            "pagination": {
+              "type": "object",
+              "description": "分页参数",
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "description": "分页 - 数据总条数"
+                },
+                "currentPage": {
+                  "type": "integer",
+                  "description": "分页 - 当前页码"
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "分页 - 分页大小"
+                }
+              }
+            }
+          }
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "courseListResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "userType": {
+              "type": "integer",
+              "description": "用户类型（0：学生，1：老师，2：教务处）"
+            },
+            "userId": {
+              "type": "string",
+              "required": true,
+              "description": "用户 ID"
+            },
+            "list": {
+              "description": "课程列表",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "课程 ID"
+                  },
+                  "courseName": {
+                    "type": "string",
+                    "description": "课程名称"
+                  },
+                  "coverImg": {
+                    "type": "string",
+                    "description": "课程封面"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "开课时间"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "考试时间"
+                  },
+                  "classHour": {
+                    "type": "integer",
+                    "description": "课时"
+                  },
+                  "teacher": {
+                    "type": "string",
+                    "description": "授课老师"
+                  },
+                  "courseStatus": {
+                    "type": "integer",
+                    "description": "课程状态（1：待审批，2：未开始，3：已开始，4：已结束，5：拒绝审批）"
+                  },
+                  "studentsNum": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "选课人数"
+                  },
+                  "major": {
+                    "type": "string",
+                    "description": "专业"
+                  },
+                  "scores": {
+                    "type": "integer",
+                    "description": "学生查询我的课程列表，需返回分数"
+                  }
+                }
+              }
+            },
+            "pagination": {
+              "type": "object",
+              "description": "分页参数",
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "description": "分页 - 数据总条数"
+                },
+                "currentPage": {
+                  "type": "integer",
+                  "description": "分页 - 当前页码"
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "分页 - 分页大小"
+                }
+              }
+            }
+          }
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "studentsListResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "list": {
+              "description": "学生列表",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "学生 ID"
+                  },
+                  "studentNo": {
+                    "type": "string",
+                    "description": "学生编号"
+                  },
+                  "studentName": {
+                    "type": "string",
+                    "description": "姓名"
+                  },
+                  "age": {
+                    "type": "string",
+                    "description": "年龄"
+                  },
+                  "tel": {
+                    "type": "string",
+                    "description": "联系方式"
+                  },
+                  "selectedCoursesNum": {
+                    "type": "integer",
+                    "description": "所选课程数"
+                  },
+                  "failingCoursesNum": {
+                    "type": "integer",
+                    "description": "不及格课程数"
+                  },
+                  "excellentCoursesNum": {
+                    "type": "integer",
+                    "description": "优良课程数"
+                  },
+                  "minScores": {
+                    "type": "integer",
+                    "description": "最低得分"
+                  },
+                  "maxScores": {
+                    "type": "integer",
+                    "description": "最高得分"
+                  }
+                }
+              }
+            },
+            "pagination": {
+              "type": "object",
+              "description": "分页参数",
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "description": "分页 - 数据总条数"
+                },
+                "currentPage": {
+                  "type": "integer",
+                  "description": "分页 - 当前页码"
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "分页 - 分页大小"
+                }
+              }
+            }
+          }
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "approvalDTO": {
+      "type": "object",
+      "properties": {
+        "courseId": {
+          "type": "string",
+          "description": "课程 ID"
+        },
+        "mark": {
+          "type": "string",
+          "description": "审批意见"
+        },
+        "status": {
+          "type": "integer",
+          "description": "是否通过审批（0：拒绝，1：通过）"
+        }
+      }
+    },
+    "courseDetailResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "课程 ID"
+            },
+            "courseName": {
+              "type": "string",
+              "description": "课程名称"
+            },
+            "coverImg": {
+              "type": "string",
+              "description": "课程封面"
+            },
+            "startDate": {
+              "type": "string",
+              "format": "date-time",
+              "description": "开课时间"
+            },
+            "endDate": {
+              "type": "string",
+              "format": "date-time",
+              "description": "考试时间"
+            },
+            "classHour": {
+              "type": "integer",
+              "description": "课时"
+            },
+            "teacher": {
+              "type": "string",
+              "description": "授课老师"
+            },
+            "courseStatus": {
+              "type": "integer",
+              "description": "课程状态（1：待审批，2：未开始，3：已开始，4：已结束，5：拒绝审批）"
+            },
+            "studentsNum": {
+              "type": "integer",
+              "format": "int32",
+              "description": "选课人数"
+            },
+            "major": {
+              "type": "string",
+              "description": "专业"
+            },
+            "scores": {
+              "type": "integer",
+              "description": "学生查询我的课程列表，需返回分数"
+            },
+            "description": {
+              "type": "string",
+              "description": "课程描述"
+            }
+          }
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "classHourListResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "课时 ID"
+              },
+              "courseId": {
+                "type": "string",
+                "description": "课程 ID"
+              },
+              "className": {
+                "type": "string",
+                "description": "课时名称"
+              },
+              "duration": {
+                "type": "integer",
+                "description": "课程时长"
+              },
+              "startDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "上课时间"
+              },
+              "classroom": {
+                "type": "string",
+                "description": "教室"
+              },
+              "classStatus": {
+                "type": "integer",
+                "description": "状态（1：未开始，2：正在上课，3：已结束）"
+              }
+            }
+          }
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "courseStudentsResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "list": {
+              "description": "学生列表",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "学生 ID"
+                  },
+                  "courseName": {
+                    "type": "string",
+                    "description": "课程名称"
+                  },
+                  "studentNo": {
+                    "type": "string",
+                    "description": "学生编号"
+                  },
+                  "studentName": {
+                    "type": "string",
+                    "description": "姓名"
+                  },
+                  "tel": {
+                    "type": "string",
+                    "description": "联系方式"
+                  },
+                  "scoresStatus": {
+                    "type": "integer",
+                    "description": "是否打分（1：是，0：否）"
+                  },
+                  "scores": {
+                    "type": "integer",
+                    "description": "分数"
+                  }
+                }
+              }
+            },
+            "pagination": {
+              "type": "object",
+              "description": "分页参数",
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "description": "分页 - 数据总条数"
+                },
+                "currentPage": {
+                  "type": "integer",
+                  "description": "分页 - 当前页码"
+                },
+                "size": {
+                  "type": "integer",
+                  "description": "分页 - 分页大小"
+                }
+              }
+            }
+          }
+        },
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string",
+          "example": "success"
+        }
+      }
+    },
+    "pagination": {
+      "type": "object",
+      "description": "分页参数",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "description": "分页 - 数据总条数"
+        },
+        "currentPage": {
+          "type": "integer",
+          "description": "分页 - 当前页码"
+        },
+        "size": {
+          "type": "integer",
+          "description": "分页 - 分页大小"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
